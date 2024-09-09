@@ -1,0 +1,31 @@
+.pagina-container{
+    font-family: Arial;
+    background-color: #f4f4f4;
+    padding: 30px;
+    color : #333;
+    background-position:center ;
+    max-width: 600px;
+    margin: 0 auto
+}
+.h2{
+    text-align: center; 
+    max-width: 10px;
+}
+.app{
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #efefef;
+    padding: 20px 30px;
+    border-radius: 10px;
+}
+.data-container {
+    display: flex;
+    gap: 10px; /* Espaçamento entre os campos */
+    align-items: center; /* Alinhamento vertical dos campos */
+  }
+  
+  .data-container select {
+    padding: 5px;
+    width: 100px; /* Largura dos campos para melhor visualização */
+  }
+  
