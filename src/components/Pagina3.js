@@ -123,7 +123,7 @@ function Pagina3() {
           {/* Selecione alimentos diários */}
           {selectedTipo && alimentacao[selectedTipo] && (
             <div className="mb-3">
-              <label className="form-label card-title-bold">Selecione seus alimentos diários:</label>
+              <label className="form-label card-title-bold">Preencha os tipos de alimento que você consome diariamente:</label>
               {alimentacao[selectedTipo].map(alimento => (
                 <div className="form-check" key={alimento}>
                   <input
@@ -138,7 +138,8 @@ function Pagina3() {
               ))}
               {errors.alimentosDiarios && <p className="text-danger">{errors.alimentosDiarios.message}</p>}
             </div>
-          )}    
+          )}
+    
 
           <button className="btn btn-primary mt-4" type="submit">Enviar</button>
         </form>

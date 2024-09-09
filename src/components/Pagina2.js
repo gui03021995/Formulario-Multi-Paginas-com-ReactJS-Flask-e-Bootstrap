@@ -1,9 +1,9 @@
 // src/components/Pagina2.js
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form'; // Certifique-se de importar o Controller aqui
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form'; 
 import { useNavigate } from 'react-router-dom';
 import { useFormContext } from '../context/FormContext';
-import './Pagina2.css'; // Importe seu CSS aqui
+import './Pagina2.css'; 
 
 function Pagina2() {
   const { formData, setFormData } = useFormContext();
@@ -12,41 +12,78 @@ function Pagina2() {
   });
   const navigate = useNavigate();
 
-  // Opções de respostas
+  const [otherFields, setOtherFields] = useState({});
+  const [livreInput, setLivreInput] = useState('');
+
   const opcoes = {
-    diabetes: ['Tenho', 'Não Tenho', 'Não sei'],
-    problemasCardiacos: ['Tenho', 'Não Tenho', 'Já tive, mas me curei'],
-    pressaoAlta: ['Tenho', 'Não Tenho', 'Não sei'],
-    asma: ['Tenho', 'Não Tenho'],
-    depressao: ['Tenho', 'Não Tenho'],
-    ansiedade: ['Tenho', 'Não Tenho'],
-    colesterolAlto: ['Tenho', 'Não Tenho', 'Não sei'],
-    doresNasCostas: ['Tenho', 'Não Tenho', 'Já tive, mas me curei'],
-    doresNasArticulacoes: ['Tenho', 'Não Tenho', 'Já tive, mas me curei'],
-    doresDeCabeca: ['Tenho', 'Não Tenho', 'Já tive, mas me curei'],
-    cancer: ['Tenho', 'Não Tenho', 'Já tive, mas me curei'],
-    infeccoesSexuaisTransmissiveis: ['Tenho', 'Não Tenho', 'Já tive, mas me curei']
+    diabetes: ['Tenho', 'Não Tenho', 'Não sei', 'Outros'],
+    problemasCardiacos: ['Tenho', 'Não Tenho', 'Já tive, mas me curei', 'Outros'],
+    pressaoAlta: ['Tenho', 'Não Tenho', 'Não sei', 'Outros'],
+    asma: ['Tenho', 'Não Tenho', 'Outros'],
+    depressao: ['Tenho', 'Não Tenho', 'Outros'],
+    ansiedade: ['Tenho', 'Não Tenho', 'Outros'],
+    colesterolAlto: ['Tenho', 'Não Tenho', 'Não sei', 'Outros'],
+    doresNasCostas: ['Tenho', 'Não Tenho', 'Já tive, mas me curei', 'Outros'],
+    doresNasArticulacoes: ['Tenho', 'Não Tenho', 'Já tive, mas me curei', 'Outros'],
+    doresDeCabeca: ['Tenho', 'Não Tenho', 'Já tive, mas me curei', 'Outros'],
+    cancer: ['Tenho', 'Não Tenho', 'Já tive, mas me curei', 'Outros'],
+    infeccoesSexuaisTransmissiveis: ['Tenho', 'Não Tenho', 'Já tive, mas me curei', 'Outros']
+  };
+
+  const formatLabel = (label) => {
+    const labels = {
+      problemasCardiacos: 'Problemas Cardíacos',
+      pressaoAlta: 'Pressão Alta',
+      colesterolAlto: 'Colesterol Alto',
+      doresNasCostas: 'Dores nas Costas',
+      doresNasArticulacoes: 'Dores nas Articulações',
+      doresDeCabeca: 'Dores de Cabeça',
+      infeccoesSexuaisTransmissiveis: 'Infecções Sexuais Transmissíveis',
+      diabetes: 'Diabetes',
+      asma: 'Asma',
+      depressao: 'Depressão',
+      ansiedade: 'Ansiedade',
+      cancer: 'Câncer'
+    };
+    return labels[label] || label
+      .replace(/([A-Z])/g, ' $1') 
+      .replace(/^./, str => str.toUpperCase())
+      .trim();
+  };
+
+  const handleOptionChange = (campo, value) => {
+    setValue(campo, value);
+    if (value === 'Outros') {
+      setOtherFields(prev => ({ ...prev, [campo]: '' }));
+    } else {
+      setOtherFields(prev => ({ ...prev, [campo]: undefined }));
+    }
+  };
+
+  const handleOtherChange = (campo, value) => {
+    setOtherFields(prev => ({ ...prev, [campo]: value }));
+  };
+
+  const handleLivreInputChange = (e) => {
+    setLivreInput(e.target.value);
   };
 
   const onSubmit = (data) => {
-    const valores = getValues(); // Obtendo os dados diretamente do contexto
+    const valores = getValues(); 
 
-    // Verificar se todos os campos obrigatórios foram preenchidos
     const camposObrigatorios = Object.keys(opcoes);
-    const todosPreenchidos = camposObrigatorios.every(campo => valores[campo]);
+    const todosPreenchidos = camposObrigatorios.every(campo => valores[campo] || otherFields[campo]);
 
     if (!todosPreenchidos) {
       alert('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
-    // Se tudo estiver correto, salvar dados no contexto e navegar para a próxima página
     setFormData(prevData => ({
       ...prevData,
-      pagina2: data
+      pagina2: { ...data, outros: otherFields, livre: livreInput }
     }));
 
-    // Navegar para a próxima página
     navigate('/pagina3');
   };
 
@@ -61,10 +98,7 @@ function Pagina2() {
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title card-title-bold">
-                      {campo
-                        .replace(/([A-Z])/g, ' ') // Adiciona espaço antes de letras maiúsculas
-                        .replace(/^./, str => str.toUpperCase()) // Capitaliza a primeira letra
-                        .trim()}
+                      {formatLabel(campo)}
                     </h5>
                     <Controller
                       control={control}
@@ -78,11 +112,20 @@ function Pagina2() {
                                 type="radio"
                                 value={opcao}
                                 checked={field.value === opcao}
-                                onChange={() => field.onChange(opcao)}
+                                onChange={() => handleOptionChange(campo, opcao)}
                               />
                               <label className="form-check-label">{opcao}</label>
                             </div>
                           ))}
+                          {field.value === 'Outros' && (
+                            <input
+                              type="text"
+                              className="form-control mt-2"
+                              placeholder="Especifique"
+                              value={otherFields[campo] || ''}
+                              onChange={(e) => handleOtherChange(campo, e.target.value)}
+                            />
+                          )}
                         </>
                       )}
                     />
@@ -90,6 +133,18 @@ function Pagina2() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="form-group mt-4">
+            <label htmlFor="livreInput">Outros :</label>
+            <input
+              id="livreInput"
+              type="text"
+              className="form-control"
+              placeholder="Digite aqui..."
+              value={livreInput}
+              onChange={handleLivreInputChange}
+            />
           </div>
 
           <button className="btn btn-primary mt-4" type="submit">Próxima Página</button>
