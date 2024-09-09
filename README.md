@@ -45,7 +45,7 @@ Formulário de três, na web para obter informações da saúde do usuário.
      - MongoDB (opcional para evolução futura)
 
 # Passos para rodar o projeto localmente 
-    1- Clone este repositório:
+    1. Clone este repositório:
     
       bash
       Copiar código
@@ -60,13 +60,13 @@ Formulário de três, na web para obter informações da saúde do usuário.
       npm start
       Configure o back-end (Flask):
 
-    2- Crie um ambiente virtual:
+    2. Crie um ambiente virtual:
       bash
       Copiar código
       python -m venv venv
       source venv/bin/activate  # Para Windows: venv\Scripts\activate
       
-    3- Instale as dependências:
+    3. Instale as dependências:
       bash
       Copiar código
       pip install -r requirements.txt
@@ -75,7 +75,7 @@ Formulário de três, na web para obter informações da saúde do usuário.
       Copiar código
       flask run
     
-    4- Acesse o front-end:
+    4. Acesse o front-end:
       Abra o navegador em http://localhost:3000 para interagir com o formulário.
 ## Futuras Implementações
     - MongoDB: Para persistir os dados do formulário em um banco de dados NoSQL.
